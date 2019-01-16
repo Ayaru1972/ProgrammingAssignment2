@@ -1,65 +1,63 @@
-## A pair of functions that cache the inverse of a matrix
+##This function creates a special "matrix" object that can cache its inverse
 
+makeCacheMatrix <-function( ma=matrix()){
 
-## Creates a special matrix object that can cache its inverse
-makeCacheMatrix <- function( mm = matrix() ) {
+## Initialize the inverse property
+i <- NULL
 
-	## Initialize the inverse property
-    i <- NULL
+## Method to set the matrix
+set <- function(matrix){
+    ma <<- matrix
+    i <<- NULL
+}
 
-    ## Method to set the matrix
-    set <- function( matrix ) {
-            mm <<- matrix
-            i <<- NULL
-    }
+## Method to get matrix
+get <- function()
+{
+ma
+}
 
-    ## Method the get the matrix
-    get <- function() {
-    	## Return the matrix
-    	mm
-    }
+##Method to set the inverse of matrix
+setInverse <- function(inverse) {
+i <<- inverse
+}
 
-    ## Method to set the inverse of the matrix
-    setInverse <- function(inverse) {
-        i <<- inverse
-    }
+##Method to get inverse
+getInverse <- functuion()
+{
+i
+}
 
-    ## Method to get the inverse of the matrix
-    getInverse <- function() {
-        ## Return the inverse property
-        i
-    }
+##Return a list of the methods
+list(set=set ,get=get,setInverse=setInverse,getInverse=getInverse)
 
-    ## Return a list of the methods
-    list(set = set, get = get,
-         setInverse = setInverse,
-         getInverse = getInverse)
 }
 
 
-## Compute the inverse of the special matrix returned by "makeCacheMatrix"
-## above. If the inverse has already been calculated (and the matrix has not
-## changed), then the "cachesolve" should retrieve the inverse from the cache.
-cacheSolve <- function(x, ...) {
+##The following function calculates the inverse of the matrix created "makeCacheMatrix. 
+##However, it first checks to see if the inverse has already been calculated.
+##If so,it gets the inverse from the cache and skips the computation. 
+##Otherwise, it calculates the inverse of the matrix and sets the value of the inverse
+##in the cache via the setinverse function.
+ 
+chacheSolve <- function( x,...){
 
-    ## Return a matrix that is the inverse of 'x'
-    mm <- x$getInverse()
+ma <- x$getInverse()
+if(!is.null(ma)){
+message("getting chached data")
+return(ma)
+}
+##Get the matrix from our object
+data <-x$get()
 
-    ## Just return the inverse if its already set
-    if( !is.null(mm) ) {
-            message("getting cached data")
-            return(mm)
-    }
+##Calculate the inverse using matrix multiplication
+ma <- solve(data) %*%data
 
-    ## Get the matrix from our object
-    data <- x$get()
+## set the inverse to the object
+x$setInverse(ma)
 
-    ## Calculate the inverse using matrix multiplication
-    mm <- solve(data) %*% data
+##Return the matrix
 
-    ## Set the inverse to the object
-    x$setInverse(mm)
+ma
 
-    ## Return the matrix
-    mm
 }
